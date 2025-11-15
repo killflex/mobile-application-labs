@@ -31,23 +31,36 @@ export default function LoginScreen({ navigation }) {
 
     setIsLoading(true);
     try {
-      // Save user token (in real app, validate credentials with backend)
-      await AsyncStorage.setItem("userToken", "logged_in");
-      await AsyncStorage.setItem("userEmail", email);
+      // Validate credentials
+      if (email === "admin@mail.com" && password === "12345") {
+        // Save user token
+        await AsyncStorage.setItem("userToken", "logged_in");
+        await AsyncStorage.setItem("userEmail", email);
+        await AsyncStorage.setItem("isLoggedIn", "true");
 
-      console.log("✅ LOGIN SUCCESSFUL");
-      console.log("User:", email);
-      console.log("Token saved to AsyncStorage");
-      console.log("Redirecting to Main screen...");
-      console.log("========================================");
+        console.log("✅ LOGIN SUCCESSFUL");
+        console.log("User:", email);
+        console.log("Token saved to AsyncStorage");
+        console.log("isLoggedIn set to true");
+        console.log("Redirecting to Main screen...");
+        console.log("========================================");
 
-      // Navigate to Main screen
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Main" }],
-      });
+        // Navigate to Main screen
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Main" }],
+        });
+      } else {
+        console.log("❌ LOGIN FAILED - Invalid Credentials");
+        console.log("Attempted Email:", email);
+        console.log("========================================");
+        Alert.alert(
+          "Login Failed",
+          "Invalid email or password. Please try again."
+        );
+      }
     } catch (error) {
-      console.error("❌ LOGIN FAILED");
+      console.error("❌ LOGIN ERROR");
       console.error("Error:", error);
       console.log("========================================");
       Alert.alert("Error", "Failed to login. Please try again.");
